@@ -2,7 +2,14 @@ package com.stackroute.newz.dao;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.stackroute.newz.model.News;
 
@@ -16,7 +23,16 @@ import com.stackroute.newz.model.News;
  * 					transaction. The database transaction happens inside the scope of a persistence 
  * 					context.  
  * */
+@Repository
+@Transactional
 public class NewsDAOImpl implements NewsDAO {
+	
+	@Autowired
+	private SessionFactory sessionFactory;
+	
+	protected Session getSession() {
+        return sessionFactory.getCurrentSession();
+    }
 
 	/*
 	 * Autowiring should be implemented for the SessionFactory.
@@ -24,14 +40,15 @@ public class NewsDAOImpl implements NewsDAO {
 	
 
 	public NewsDAOImpl(SessionFactory sessionFactory) {
-	
-	}
-
+					
+	}		
+		
 	/*
 	 * Save the news in the database(news) table.
 	 */
 	public boolean addNews(News news) {
-		return false;
+		 getSession().persist(news);
+		return true;
 	}
 
 	/*
@@ -39,24 +56,34 @@ public class NewsDAOImpl implements NewsDAO {
 	 * order(showing latest news first)
 	 */
 	public List<News> getAllNews() {
-		return null;
+		//@SuppressWarnings("deprecation")
+		Criteria criteria=getSession().createCriteria(News.class);
+		
+        return (List<News>) criteria.list();
 	}
 
 	/*
 	 * retrieve specific news from the database(news) table
 	 */
 	public News getNewsById(int newsId) {
-		return null;
+		Criteria criteria = getSession().createCriteria(News.class);
+        criteria.add(Restrictions.eq("newsId", newsId));
+        return (News) criteria.uniqueResult();
 	}
 
 	public boolean updateNews(News news) {
-		return false;
+		getSession().update(news);
+		return true;
 	}
 
 	/*
 	 * Remove the news from the database(news) table.
 	 */
+	@SuppressWarnings("deprecation")
 	public boolean deleteNews(int newsId) {
-		return false;
+		 Query query = getSession().createSQLQuery("delete from User where newsId = :newsId");
+	        query.setInteger("newsId", newsId);
+	        query.executeUpdate();
+		return true;
 	}
 }

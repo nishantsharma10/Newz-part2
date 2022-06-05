@@ -1,5 +1,6 @@
 package com.stackroute.newz.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -17,64 +18,110 @@ import org.springframework.stereotype.Component;
  * any Java objects annotated with the @Entity annotation. If it finds any, then it will begin the 
  * process of looking through that particular Java object to recreate it as a table in your database.
  */
-public class News
+@Entity
+@Table(name="news")
+public class News implements Serializable
 {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int newsId;
 	
+	@Column(name="USERNAME")
+	private String name;
 	
+	private String author;
+	private String description;
+	private String content;
+	private LocalDateTime publishedAt;
 	public News() {	
 	}
 
+	
+
 	public News(int newsId, String name, String author, String description, String content, LocalDateTime publishedAt) {
 		
+		this.newsId = newsId;
+		this.name = name;
+		this.author = author;
+		this.description = description;
+		this.content = content;
+		this.publishedAt = publishedAt;
 	}
+
+
 
 	public int getNewsId() {
-		return 0;
+		return newsId;
 	}
 
-	public void setNewsId(int newzId) {
-		
+
+
+	public void setNewsId(int newsId) {
+		this.newsId = newsId;
 	}
+
+
 
 	public String getName() {
-		return null;
+		return name;
 	}
+
+
 
 	public void setName(String name) {
-		
+		this.name = name;
 	}
+
+
 
 	public String getAuthor() {
-		return null;
+		return author;
 	}
+
+
 
 	public void setAuthor(String author) {
-		
+		this.author = author;
 	}
+
+
 
 	public String getDescription() {
-		return null;
+		return description;
 	}
+
+
 
 	public void setDescription(String description) {
-		
+		this.description = description;
 	}
 
-	public LocalDateTime getPublishedAt() {
-		return null;
-	}
 
-	public void setPublishedAt(LocalDateTime publishedAt) {
-		
-	}
 
 	public String getContent() {
-		return null;
+		return content;
 	}
+
+
 
 	public void setContent(String content) {
-		
+		this.content = content;
 	}
 
+
+
+	public LocalDateTime getPublishedAt() {
+		return publishedAt;
+	}
+
+
+
+	public void setPublishedAt(LocalDateTime publishedAt) {
+		this.publishedAt = publishedAt;
+	}
+
+
+
+	
 	
 }
